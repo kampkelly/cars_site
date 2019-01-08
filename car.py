@@ -14,10 +14,25 @@ class Car(SQLAlchemyObjectType):
         only_fields = ("colour","model","name","year")
 
 class Query(graphene.ObjectType):
-    cars = graphene.List(Car)
+    cars = graphene.List(
+        Car,
+        name=graphene.String()
+        )
+    view_car = graphene.Field(
+        Car, 
+        name=graphene.String()
+        )
+
     def resolve_cars(self, info, **kwargs):
         query = Car.get_query(info)
-        return query.all()
+        if kwargs.get('name'):
+            return query.filter(CarModel.name.ilike("%" + kwargs.get('name') + "%")).all()
+        else:
+            return query.all()
+    
+    def resolve_view_car(self, info, **kwargs):
+        query = Car.get_query(info)
+        return query.filter(CarModel.name.ilike("%" + kwargs.get('name') + "%")).first()
 
 class CreateCar(graphene.Mutation):
 
