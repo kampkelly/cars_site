@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 import graphene
+from graphql import GraphQLError
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from flask_graphql import GraphQLView
 from livereload import Server, shell
