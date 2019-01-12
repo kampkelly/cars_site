@@ -1,5 +1,6 @@
 from includes.index import *
 from graphql import GraphQLError
+from tasks import add_together
 
 class UserModel(Base, Utility):
     __tablename__ ="users"
@@ -24,6 +25,8 @@ class Query(graphene.ObjectType):
 
     def resolve_signin_user(self, info, **kwargs):
         query = User.get_query(info)
+        result = add_together.delay(23, 42)
+        result.wait()
         if kwargs.get('email') and kwargs.get('password'):
             find_user = query.filter(UserModel.email == kwargs.get('email')).first()
             if find_user:

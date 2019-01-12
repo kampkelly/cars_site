@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+redis-5.0.3
+redis-5.0.3.tar.gz
+.DS_Store

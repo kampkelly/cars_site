@@ -8,3 +8,4 @@ livereload
 jsonpickle
 psycopg2
 flask-bcrypt
+celery[redis]
