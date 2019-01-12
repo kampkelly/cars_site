@@ -22,7 +22,7 @@ class SignupUser(graphene.Mutation):
     token = graphene.String()
 
     def mutate(self, info, **kwargs):
-        kwargs['password'] = bcrypt.generate_password_hash(kwargs['password'])
+        kwargs['password'] = bcrypt.generate_password_hash(kwargs['password']).decode('utf-8')
         user = UserModel(**kwargs)
         user.save()
         encoded_jwt = jwt.encode({'email': kwargs['email'], 'name': kwargs['name']}, 'secret', algorithm='HS256')
