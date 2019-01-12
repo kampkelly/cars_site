@@ -7,3 +7,4 @@ flask_sqlalchemy==2.3.1
 livereload
 jsonpickle
 psycopg2
+flask-bcrypt

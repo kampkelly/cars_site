@@ -10,6 +10,7 @@ from livereload import Server, shell
 import json
 import jsonpickle
 import jwt
+from flask_bcrypt import Bcrypt
 
 Session = sessionmaker()
 engine = create_engine("postgresql://postgres:postgres@localhost/cars")
@@ -23,6 +24,7 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:postgres@localhost/cars' #connect to database
 db=SQLAlchemy(app)
 
