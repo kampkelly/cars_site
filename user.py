@@ -1,17 +1,9 @@
-from includes.index import Base, Utility, bcrypt
-from sqlalchemy import Column, Integer, String
+from reusable.index import bcrypt
 import jwt
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphql import GraphQLError
-
-
-class UserModel(Base, Utility):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    email = Column(String(100), nullable=False, unique=True)
-    name = Column(String(255), nullable=False, unique=True)
-    password = Column(String(255), nullable=False)
+from models.user_model import UserModel
 
 
 class User(SQLAlchemyObjectType):
