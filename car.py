@@ -1,17 +1,23 @@
-from includes.index import *
+from includes.index import Base, Utility
+from sqlalchemy import Column, Integer, String
+import graphene
+from graphene_sqlalchemy import SQLAlchemyObjectType
+
 
 class CarModel(Base, Utility):
-    __tablename__="cars"
-    id=Column(Integer, primary_key=True)
-    colour=Column(String(100), default='black')
-    model=Column(String(100), nullable=False)
-    name=Column(String(120), nullable=False, unique=True)
-    year=Column(Integer, nullable=False)
+    __tablename__ = "cars"
+    id = Column(Integer, primary_key=True)
+    colour = Column(String(100), default='black')
+    model = Column(String(100), nullable=False)
+    name = Column(String(120), nullable=False, unique=True)
+    year = Column(Integer, nullable=False)
+
 
 class Car(SQLAlchemyObjectType):
     class Meta:
         model = CarModel
-        only_fields = ("colour","model","name","year")
+        only_fields = ("colour", "model", "name", "year")
+
 
 class Query(graphene.ObjectType):
     cars = graphene.List(
@@ -19,7 +25,7 @@ class Query(graphene.ObjectType):
         name=graphene.String()
         )
     view_car = graphene.Field(
-        Car, 
+        Car,
         name=graphene.String()
         )
 
@@ -29,10 +35,11 @@ class Query(graphene.ObjectType):
             return query.filter(CarModel.name.ilike("%" + kwargs.get('name') + "%")).all()
         else:
             return query.all()
-    
+
     def resolve_view_car(self, info, **kwargs):
         query = Car.get_query(info)
         return query.filter(CarModel.name.ilike("%" + kwargs.get('name') + "%")).first()
+
 
 class CreateCar(graphene.Mutation):
 
@@ -47,6 +54,7 @@ class CreateCar(graphene.Mutation):
         car = CarModel(**kwargs)
         car.save()
         return CreateCar(car=car)
+
 
 class Mutation(graphene.ObjectType):
     create_car = CreateCar.Field()
