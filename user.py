@@ -1,12 +1,17 @@
-from includes.index import *
+from includes.index import Base, Utility, bcrypt
+from sqlalchemy import Column, Integer, String
+import jwt
+import graphene
+from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphql import GraphQLError
 
+
 class UserModel(Base, Utility):
-    __tablename__ ="users"
-    id=Column(Integer, primary_key=True)
-    email=Column(String(100), nullable=False, unique=True)
-    name=Column(String(255), nullable=False, unique=True)
-    password=Column(String(255), nullable=False)
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(100), nullable=False, unique=True)
+    name = Column(String(255), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
 
 
 class User(SQLAlchemyObjectType):
@@ -29,7 +34,7 @@ class Query(graphene.ObjectType):
             if find_user:
                 check_password = bcrypt.check_password_hash(find_user.password, kwargs.get('password'))
                 if check_password:
-                    encoded_jwt = jwt.encode({'email': find_user.email, 'name': find_user.name}, 'secret', algorithm='HS256')
+                    # encoded_jwt = jwt.encode({'email': find_user.email, 'name': find_user.name}, 'secret', algorithm='HS256') # noqa
                     return find_user
                 else:
                     raise GraphQLError('You are not authorized to login!')
@@ -54,6 +59,7 @@ class SignupUser(graphene.Mutation):
         user.save()
         encoded_jwt = jwt.encode({'email': kwargs['email'], 'name': kwargs['name']}, 'secret', algorithm='HS256')
         return SignupUser(user=user, token=encoded_jwt)
+
 
 class Mutation(graphene.ObjectType):
     signup_user = SignupUser.Field()

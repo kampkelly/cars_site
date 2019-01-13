@@ -1,5 +1,6 @@
-from includes.index import *
-from car import *
+from includes.index import app, Base, engine
+from flask_graphql import GraphQLView
+from livereload import Server
 from schema import schema
 
 app.add_url_rule(
@@ -11,10 +12,12 @@ app.add_url_rule(
         )
     )
 
+
 @app.route('/createdb')
 def create_db():
     Base.metadata.create_all(bind=engine)
     return 'db created'
+
 
 app.debug = True
 

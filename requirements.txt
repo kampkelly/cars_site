@@ -8,3 +8,4 @@ livereload
 jsonpickle
 psycopg2
 flask-bcrypt
+flake8
