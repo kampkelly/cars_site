@@ -4,9 +4,29 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from flask_bcrypt import Bcrypt
+import os
 
 Session = sessionmaker()
-engine = create_engine("postgresql://postgres:postgres@localhost/cars")
+
+
+def create_app(config_name):
+    app = Flask(__name__)
+    engine = None
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    if config_name == 'development':
+        engine = create_engine(os.getenv('DEV_DATABASE_URL'))
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DEV_DATABASE_URL')  # connect to database
+    elif config_name == 'testing':
+        engine = create_engine(os.getenv('TEST_DATABASE_URL'))
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL')
+    elif config_name == 'production':
+        pass
+    settings = {'app': app, 'engine': engine}
+    return settings
+
+
+app, engine = create_app(os.getenv('APP_SETTINGS'))['app'], create_app(os.getenv('APP_SETTINGS'))['engine']
+
 Session.configure(bind=engine)
 session = Session()
 
@@ -16,11 +36,8 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 Base = declarative_base()
 Base.query = db_session.query_property()
 
-app = Flask(__name__)
-bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/cars'  # connect to database
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 
 class Utility(object):
