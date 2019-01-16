@@ -1,9 +1,9 @@
-from reusable.index import bcrypt
 import jwt
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from graphql import GraphQLError
 from models.user_model import UserModel
+from reusable.index import bcrypt
 
 
 class User(SQLAlchemyObjectType):

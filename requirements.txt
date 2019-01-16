@@ -10,3 +10,6 @@ psycopg2
 flask-bcrypt
 flake8
 alembic
+tox
+pytest
+Flask-Testing

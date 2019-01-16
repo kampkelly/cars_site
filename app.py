@@ -1,4 +1,4 @@
-from reusable.index import app, Base, engine
+from reusable.index import app, engine, Base
 from flask_graphql import GraphQLView
 from livereload import Server
 from schema import schema
